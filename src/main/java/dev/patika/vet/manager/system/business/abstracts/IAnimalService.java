@@ -31,7 +31,7 @@ public interface IAnimalService {
     List<Animal> getAllAnimals();
 
     // hayvan sahiplerini isme göre filtreler
-    List<Animal> getCustomerByName(String name);
+    List<Animal> getCustomerByName(String ownerName);
 
     // hayvanları isme göre filtreleme
     List<Animal> getAnimalByName(String name);

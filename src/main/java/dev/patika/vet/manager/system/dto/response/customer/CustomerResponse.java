@@ -18,6 +18,6 @@ public class CustomerResponse {
     private String phone;
     private String mail;
     private String city;
-    private List<AnimalResponse> animals;
+
 
 }

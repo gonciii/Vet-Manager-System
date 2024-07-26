@@ -32,7 +32,7 @@ public class Appointment {
     private Animal animal;
 
     // birden fazla randevu  ---> bir doktor
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 }

@@ -29,6 +29,9 @@ public class AppointmentManager implements IAppointmentService {
     // save -- yeni randevu kayıt etme
     @Override
     public Appointment save(Appointment appointment) {
+        if (appointment.getId() > 0 && this.appointmentRepo.existsById(appointment.getId())) {
+            throw new NotFoundException("Aynı ID ile randevu kaydedilemez: " + appointment.getId());
+        }
         return this.appointmentRepo.save(appointment);
     }
 

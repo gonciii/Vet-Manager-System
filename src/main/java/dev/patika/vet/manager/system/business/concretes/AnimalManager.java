@@ -30,6 +30,10 @@ public class AnimalManager  implements IAnimalService {
     // save --> yeni hayvan kaydetme
     @Override
     public Animal save(Animal animal) {
+        // id kontrolünü yap!
+        if(animal.getId() > 0 && this.animalRepo.existsById(animal.getId())) {
+            throw new NotFoundException("Aynı ID ile hayvan kaydedilmez : " + animal.getId());
+        }
         return this.animalRepo.save(animal);
     }
 
@@ -87,8 +91,8 @@ public class AnimalManager  implements IAnimalService {
 
     // isme göre hayvvan getir
     @Override
-    public List<Animal> getAnimalByName(String name) {
-        return this.animalRepo.findByName(name);
+    public List<Animal> getAnimalByName(String ownerName) {
+        return this.animalRepo.findByName(ownerName);
     }
 
     // Customer Id'ye göre hayvanları getir.

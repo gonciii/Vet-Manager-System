@@ -53,11 +53,11 @@ public class Animal {
     private Customer customer;
 
     // bir hayvanın birden fazla aşısı olabilir !
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private List<Vaccine> vaccines;
 
     // bir hayvanın birden fazla randevusu olabilir.
-    @OneToMany(mappedBy = "animal")
+    @OneToMany(mappedBy = "animal",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private List<Appointment> appointments;
 
 

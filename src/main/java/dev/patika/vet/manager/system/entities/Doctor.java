@@ -27,7 +27,7 @@ public class Doctor {
     @Column(name = "doctor_phone")
     private String phone;
 
-    @Column(name = "doctor_mail")
+    @Column(name = "doctor_mail",unique = true)
     private String mail;
 
     @Column(name = "doctor_address")
@@ -37,10 +37,11 @@ public class Doctor {
     private String city;
 
    // bir doktor ---> birden fazla müsait,uygun zamana da sahip olabilir !
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor",cascade = CascadeType.REMOVE)
     private List<AvailableDate> availableDates;
 
    // bir doktor --> birden fazla randevuya sahip olabilir !
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor",cascade = CascadeType.REMOVE)
     private List<Appointment> appointments;
+
 }

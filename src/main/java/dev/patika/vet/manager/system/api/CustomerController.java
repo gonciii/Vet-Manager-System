@@ -21,6 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/v1/customers")
 
@@ -76,7 +79,7 @@ public class CustomerController {
     }
 
     // cursor ---> customer sayfalama
-    @GetMapping()
+    @GetMapping("/cursor/")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CursorResponse<CustomerResponse>> cursor(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
@@ -95,5 +98,45 @@ public class CustomerController {
 
         return ResultHelper.success(cursor);
     }
+
+    // tüm müşterileri getiren
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<List<CustomerResponse>> getAllCustomers() {
+        List<Customer> customers = customerService.getAllCustomers();
+        List<CustomerResponse> customerResponses = customers.stream()
+                .map(customer -> modelMapper.forResponse().map(customer, CustomerResponse.class))
+                .collect(Collectors.toList());
+        return ResultHelper.success(customerResponses);
+    }
+
+    // isim ile müşteri aramak için :
+    // İsim ile müşteri ara
+    @GetMapping("/name/{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<List<CustomerResponse>> getCustomersByName(
+            @PathVariable(name = "name", required = false) String name) {
+        List<Customer> filteredCustomers = customerService.getCustomerByName(name);
+        List<CustomerResponse> customerResponses = filteredCustomers.stream()
+                .map(customer -> modelMapper.forResponse().map(customer, CustomerResponse.class))
+                .collect(Collectors.toList());
+        return ResultHelper.success(customerResponses);
+    }
+
+    // Belirli bir müşterinin hayvanlarını getir
+    @GetMapping("/{customerId}/animals")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<List<AnimalResponse>> getCustomerAnimals(@PathVariable("customerId") Long customerId) {
+        List<Animal> customerAnimals = customerService.getAnimalsByCustomer(customerId);
+        List<AnimalResponse> animalResponses = customerAnimals.stream()
+                .map(animal -> modelMapper.forResponse().map(animal, AnimalResponse.class))
+                .collect(Collectors.toList());
+        return ResultHelper.success(animalResponses);
+    }
+    //
+
+
+
+
 
 }

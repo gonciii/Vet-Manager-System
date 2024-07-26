@@ -36,4 +36,6 @@ public interface IVaccineService {
     // Belirli bir tarih aralığına göre koruma başlangıcı olan aşı kayıtlarını getirme
     List<Animal> getAnimalsWithUpcomingVaccines(LocalDate startDate, LocalDate endDate);
 
+    // Belirli bir hayvana ait, belirli bir tarih aralığına göre koruma başlangıcı olan aşı kayıtlarını getirme
+    List<Vaccine> findByAnimalIdAndProtectionStartDateBetween(Long animalId, LocalDate startDate, LocalDate endDate);
 }

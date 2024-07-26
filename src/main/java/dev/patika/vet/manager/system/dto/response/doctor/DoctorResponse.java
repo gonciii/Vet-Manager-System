@@ -21,9 +21,7 @@ public class DoctorResponse {
     private String mail;
     private String address;
     private String city;
-    // Doktora ait müsait olan günler
-    private List<AvailableDateResponse> availableDate;
-    // Doktora ait randevular
-    private List<AppointmentResponse> appointment;
+
+
 
 }

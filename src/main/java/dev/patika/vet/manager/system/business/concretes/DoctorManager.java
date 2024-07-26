@@ -26,6 +26,9 @@ public class DoctorManager  implements IDoctorService {
     // save ---> doktor kaydetme
     @Override
     public Doctor save(Doctor doctor) {
+        if(doctor.getId() > 0 && this.doctorRepo.existsById(doctor.getId())) {
+            throw new NotFoundException("Aynı ID ile doktor kaydedilmez : " + doctor.getId());
+        }
         return this.doctorRepo.save(doctor);
     }
 

@@ -27,6 +27,9 @@ public class CustomerManager implements ICustomerService {
     // yeni müşteri oluşturma : save
     @Override
     public Customer save(Customer customer) {
+        if (customer.getId() > 0 && this.customerRepo.existsById(customer.getId())) {
+            throw new NotFoundException("Aynı ID ile müşteri kaydedilemez: " + customer.getId());
+        }
         return this.customerRepo.save(customer);
     }
 

@@ -77,7 +77,7 @@ public class AppointmentController {
     }
 
     // cursor ---> randevu sayfalama
-    @GetMapping()
+    @GetMapping("/cursor/")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<CursorResponse<AppointmentResponse>> cursor(
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,

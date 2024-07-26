@@ -9,4 +9,5 @@ public class Msg {
     public static final String NOT_PAGE_ERROR = "Page hatası";
     public static final String BAD_REQUEST = "Veri bos olamaz";
     public static final String DELETED = "Kayıt silindi.";
+    public static final String NULL_DATE ="Tarih boş olamaz.";
 }

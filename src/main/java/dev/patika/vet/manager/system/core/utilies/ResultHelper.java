@@ -38,4 +38,7 @@ public class ResultHelper {
     public static  Result ok() {
         return new Result(true,Msg.OK,"200");
     }
+    public static Result null_date() {
+        return new Result(false,Msg.NULL_DATE,"400");
+    }
 }

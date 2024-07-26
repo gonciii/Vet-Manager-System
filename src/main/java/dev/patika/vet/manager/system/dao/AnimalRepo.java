@@ -13,5 +13,5 @@ public interface AnimalRepo  extends JpaRepository<Animal,Long> {
 
     // JpaRepository arayüzü, temel CRUD işlemlerini otomatik olarak sağlar:
     // Spring Data JPA, method isimlendirme kurallarına göre özel sorgular oluşturmanıza izin verir.
-    List<Animal> findByName(String name);
+    List<Animal> findByName(String ownerName);
 }

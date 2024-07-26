@@ -29,7 +29,7 @@ public class Customer {
     @Column(name = "customer_phone")
     private String phone;
 
-    @Column(name = "customer_mail")
+    @Column(name = "customer_mail",unique = true)
     private String mail;
 
     @Column(name = "customer_address")
@@ -39,7 +39,7 @@ public class Customer {
     private String city;
 
     // bir müşterinin birden fazla hayvanı olabilir !
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)  // animal entity'si ile ilişki kuruldu !
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)  // animal entity'si ile ilişki kuruldu !
     private List<Animal> animals;
 
 
