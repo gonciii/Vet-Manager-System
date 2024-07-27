@@ -29,9 +29,13 @@ Tüm API endpointleri ilgili entity'ye göre Postman collection'a klasör klasö
 
 ## API Endpoints
 
-## Animal API Endpointleri
+## Animal API Endpoint
 
 ![Ekran Görüntüsü (66)](https://github.com/user-attachments/assets/5cc09ede-e55b-485d-ae86-ac74c377a28f)
+
+## Customer API Endpoint
+
+![Ekran Görüntüsü (67)](https://github.com/user-attachments/assets/f2b64f90-fa94-475a-bb37-3841f2c7c2bc)
 
 
 
