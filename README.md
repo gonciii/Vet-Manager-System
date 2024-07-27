@@ -31,13 +31,7 @@ Tüm API endpointleri ilgili entity'ye göre Postman collection'a klasör klasö
 
 ## Animal API Endpointleri
 
-GET	/v1/animals	Tüm hayvanları listele
-POST	/v1/animals	Yeni hayvan kaydet
-GET	/v1/animals/{id}	Belirli bir hayvanı ID ile getir
-PUT	/v1/animals/{id}	Belirli bir hayvanın bilgilerini güncelle
-DELETE	/v1/animals/{id}	Belirli bir hayvanı sil
-GET	/v1/animals/search?name={name}	İsme göre hayvanları filtrele
-GET	/v1/customers/{id}/animals	Belirli bir müşteriye ait tüm hayvanları listele
+![Ekran Görüntüsü (66)](https://github.com/user-attachments/assets/5cc09ede-e55b-485d-ae86-ac74c377a28f)
 
 
 
