@@ -1,6 +1,7 @@
 package dev.patika.vet.manager.system.business.concretes;
 
 import dev.patika.vet.manager.system.business.abstracts.IAnimalService;
+import dev.patika.vet.manager.system.core.exception.DuplicateAnimalException;
 import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.utilies.Msg;
 import dev.patika.vet.manager.system.dao.AnimalRepo;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnimalManager  implements IAnimalService {
@@ -28,6 +30,11 @@ public class AnimalManager  implements IAnimalService {
     // save --> yeni hayvan kaydetme
     @Override
     public Animal save(Animal animal) {
+        Optional<Animal> existingAnimal = animalRepo.findByNameAndSpecies(animal.getName(), animal.getSpecies());
+        if (existingAnimal.isPresent()) {
+            throw new DuplicateAnimalException("Bu hayavan zaten kayıtlı.");
+        }
+
         return this.animalRepo.save(animal);
     }
 

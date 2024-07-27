@@ -19,21 +19,21 @@ import java.util.Optional;
 @Repository
 public interface AppointmentRepo  extends JpaRepository<Appointment,Long> {
 
-    // şuna bak
-    Optional<Appointment> findByDoctorIdAndAppointmentDate(Long doctorId, LocalDateTime appointmentDate);
 
     @Query("SELECT a FROM Appointment a WHERE a.appointmentDate BETWEEN :startDate AND :endDate AND a.animal.id = :animalId")
     List<Appointment> findByAppointmentDateAndAnimalIdBetween(
+            @Param("animalId") Long animalId,
             @Param("startDate") LocalDateTime startDatetime,
-            @Param("endDate") LocalDateTime endDatetime,
-            @Param("animalId") Long animalId
+            @Param("endDate") LocalDateTime endDatetime
+
+    );
+    @Query("SELECT a FROM Appointment a WHERE a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate AND a.doctor.id = :doctorId")
+    List<Appointment> findByDoctor_DoctorIdAndAppointmentDateBetween(
+            @Param("doctorId") Long doctorId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
     );
 
-    @Query("SELECT a FROM Appointment a WHERE a.appointmentDate BETWEEN :startDate AND :endDate AND a.doctor.id = :doctorId")
-    List<Appointment> findByAppointmentDateAndDoctorIdBetween(
-            @Param("startDate") LocalDateTime startDatetime,
-            @Param("endDate") LocalDateTime endDatetime,
-            @Param("doctorId") Long doctorId
-    );
+    boolean existsByDoctor_IdAndAppointmentDate(Long id, LocalDateTime appointmentDateTime);
 
 }

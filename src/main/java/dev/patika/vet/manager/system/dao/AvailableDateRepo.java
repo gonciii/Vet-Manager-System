@@ -14,4 +14,5 @@ public interface AvailableDateRepo  extends JpaRepository<AvailableDate,Long> {
 
     Optional<AvailableDate> findByDoctorIdAndAvailableDate(Long doctorId, LocalDate date);
 
+    List<AvailableDate> findByDoctorId(long doctorId);
 }

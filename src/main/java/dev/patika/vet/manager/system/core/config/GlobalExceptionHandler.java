@@ -2,6 +2,7 @@ package dev.patika.vet.manager.system.core.config;
 
 
 import dev.patika.vet.manager.system.core.exception.NotFoundException;
+import dev.patika.vet.manager.system.core.exception.ScheduleConflictException;
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
@@ -41,6 +42,11 @@ public class GlobalExceptionHandler {
 
         // GERİYE BİR RESULT DATA DÖNER !
         return new ResponseEntity<>(ResultHelper.validateError(validationErrorList), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(ScheduleConflictException.class)
+    public ResponseEntity<Result> handleScheduleConflictException(ScheduleConflictException e) {
+        // Randevu çakışma hatalarını ele al
+        return new ResponseEntity<>(ResultHelper.scheduleConflictError(e.getMessage()), HttpStatus.CONFLICT);
     }
 
 

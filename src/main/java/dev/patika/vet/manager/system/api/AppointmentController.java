@@ -18,6 +18,7 @@ import dev.patika.vet.manager.system.entities.Appointment;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class AppointmentController {
     private final IAnimalService animalService;
 
 
+
     // dependency injection !
     public AppointmentController(IAppointmentService appointmentService, IModelMapperService modelMapper, IDoctorService doctorService, IAnimalService animalService) {
         this.appointmentService = appointmentService;
@@ -44,15 +46,8 @@ public class AppointmentController {
     // kayıt işlemi --> SAVE
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResultData<AppointmentResponse> save(@Valid @RequestBody AppointmentSaveRequest appointmentSaveRequest) {
-
-
-        // REQUEST--> appointment
-        Appointment saveAppointment = this.modelMapper.forRequest().map(appointmentSaveRequest, Appointment.class);
-        this.appointmentService.save(saveAppointment);
-
-        // appointment --> RESPONSE
-        return ResultHelper.created(this.modelMapper.forResponse().map(saveAppointment,AppointmentResponse.class));
+    public AppointmentResponse save(@Valid @RequestBody AppointmentSaveRequest appointmentSaveRequest) {
+        return appointmentService.save(appointmentSaveRequest);
     }
 
     // ID'ye göre randevu getirme
@@ -100,30 +95,25 @@ public class AppointmentController {
         return ResultHelper.success(cursor);
     }
 
-    @GetMapping("/doctor/{doctorId}")
+    @GetMapping("/doctor")
     @ResponseStatus(HttpStatus.OK)
-    public List<AppointmentResponse> getByDoctorIdAndAppointmentDateBetween(
-
-            @PathVariable("doctorId") Long doctorId,
+    public ResponseEntity<ResultData<List<AppointmentResponse>>> getByDoctorIdAndAppointmentDateBetween(
+            @RequestParam("doctorId") Long doctorId,
             @RequestParam("start_date_time") LocalDateTime startDateTime,
             @RequestParam("end_date_time") LocalDateTime endDateTime) {
-        List<Appointment> appointments = this.appointmentService.findByDoctorIdAndAppointmentDateBetween(startDateTime, endDateTime,doctorId);
-        return appointments.stream()
-                .map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class))
-                .collect(Collectors.toList());
+        ResultData<List<AppointmentResponse>> result = this.appointmentService.getAppointmentsByDoctorAndDate(startDateTime, endDateTime, doctorId);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/animal/{animalId}")
+    @GetMapping("/animal")
     @ResponseStatus(HttpStatus.OK)
-    public List<AppointmentResponse> getByAnimalIdAndAppointmentDateBetween(
+    public ResponseEntity<ResultData<List<AppointmentResponse>>>getByAnimalIdAndAppointmentDateBetween(
             // This method returns the appointments by animal id.
-            @PathVariable("animalId") Long animalId,
+            @RequestParam("animalId") Long animalId,
             @RequestParam("start_date_time") LocalDateTime startDateTime,
             @RequestParam("end_date_time") LocalDateTime endDateTime) {
-        Animal animal = this.animalService.get(animalId); // Assuming you have a method to get Animal by id
-        List<Appointment> appointments = this.appointmentService.findByAppointmentDateBetweenAndAnimal(startDateTime, endDateTime, animal);
-        return appointments.stream()
-                .map(appointment -> this.modelMapper.forResponse().map(appointment, AppointmentResponse.class))
-                .collect(Collectors.toList());
+        ResultData<List<AppointmentResponse>> result = this.appointmentService.getAppointmentsByAnimalAndDate(animalId,startDateTime, endDateTime);
+
+        return ResponseEntity.ok(result);
     }
 }

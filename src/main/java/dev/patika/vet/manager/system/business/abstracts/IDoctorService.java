@@ -3,6 +3,7 @@ package dev.patika.vet.manager.system.business.abstracts;
 import dev.patika.vet.manager.system.entities.Doctor;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IDoctorService {
@@ -19,5 +20,5 @@ public interface IDoctorService {
 
     List<Doctor> getAllDoctors();
 
-
+    boolean isDoctorAvailable(long doctor, LocalDate date);
 }

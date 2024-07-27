@@ -4,10 +4,13 @@ package dev.patika.vet.manager.system.api;
 import dev.patika.vet.manager.system.business.abstracts.IAnimalService;
 import dev.patika.vet.manager.system.business.abstracts.ICustomerService;
 import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService;
+import dev.patika.vet.manager.system.core.exception.DuplicateAnimalException;
 import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
+import dev.patika.vet.manager.system.core.utilies.Msg;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
+import dev.patika.vet.manager.system.dao.CustomerRepo;
 import dev.patika.vet.manager.system.dto.request.animal.AnimalSaveRequest;
 import dev.patika.vet.manager.system.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,28 +32,40 @@ public class AnimalController {
     private final IAnimalService animalService;
     private final ICustomerService customerService;
     private final IModelMapperService modelMapper;
+    private final CustomerRepo customerRepo;
 
 
     // dependency injection !
-    public AnimalController(IAnimalService animalService, ICustomerService customerService, IModelMapperService modelMapper) {
+    public AnimalController(IAnimalService animalService, ICustomerService customerService, IModelMapperService modelMapper , CustomerRepo customerRepo) {
         this.animalService = animalService;
         this.customerService = customerService;
         this.modelMapper = modelMapper;
+        this.customerRepo = customerRepo;
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<AnimalResponse> save(@Valid @RequestBody AnimalSaveRequest animalSaveRequest) {
 
-        Animal saveAnimal = this.modelMapper.forRequest().map(animalSaveRequest, Animal.class);
+        Animal animal = new Animal();
+        animal.setName(animalSaveRequest.getName());
+        animal.setSpecies(animalSaveRequest.getSpecies());
+        animal.setBreed(animalSaveRequest.getBreed());
+        animal.setGender(animalSaveRequest.getGender());
+        animal.setColour(animalSaveRequest.getColour());
+        animal.setDateOfBirth(animalSaveRequest.getDateOfBirth());
+        animal.setCustomer(customerRepo.findById(animalSaveRequest.getCustomerId()).orElseThrow(()-> new NotFoundException(Msg.CREATED)));
 
-        Customer customer = this.customerService.get(animalSaveRequest.getCustomerId());
-        saveAnimal.setCustomer(customer);
-
-        this.animalService.save(saveAnimal);
-        return ResultHelper.created(this.modelMapper.forResponse().map(saveAnimal, AnimalResponse.class));
-
+        try {
+            Animal savedAnimal = animalService.save(animal);
+            AnimalResponse animalResponse = modelMapper.forResponse().map(savedAnimal, AnimalResponse.class);
+            return ResultHelper.created(animalResponse);
+        } catch (DuplicateAnimalException e) {
+            return ResultHelper.animalNotFoundError(e.getMessage());
+        }
     }
+
+
 
 
     // ID'ye göre hayvan getirme

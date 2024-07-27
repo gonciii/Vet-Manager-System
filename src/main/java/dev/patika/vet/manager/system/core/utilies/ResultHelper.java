@@ -16,8 +16,9 @@ public class ResultHelper {
     public static <T> ResultData<T> badRequest(T data) {
         return new ResultData<>(false, Msg.BAD_REQUEST,"400",data);
     }
-
-
+    public static <T> ResultData<T> animalNotFoundError(String msg) {
+        return new ResultData<>(false, msg, "400", null);
+    }
     public static <T> ResultData<T> success(T data) {
         return new ResultData<>(true,Msg.OK,"200",data);
     }
@@ -30,7 +31,9 @@ public class ResultHelper {
         return new Result(false,Msg.NOT_PAGE_ERROR,"404");
 
     }
-
+    public static Result scheduleConflictError(String message) {
+        return new Result(false, message, "409");
+    }
     public static Result deleted(){
         return new Result(true ,Msg.DELETED , "200");
     }
