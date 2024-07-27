@@ -41,5 +41,8 @@ Tüm API endpointleri ilgili entity'ye göre Postman collection'a klasör klasö
 
 ![Ekran Görüntüsü (68)](https://github.com/user-attachments/assets/3c458bd8-3d28-45ad-9636-c3b94a2dd73b)
 
+## Appointment API Endpoint
+
+![Ekran Görüntüsü (69)](https://github.com/user-attachments/assets/fa6a62c5-d402-4031-bc4d-f0cd66a795ab)
 
 
