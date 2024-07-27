@@ -1,25 +1,18 @@
 package dev.patika.vet.manager.system.api;
-
-
 import dev.patika.vet.manager.system.business.abstracts.IDoctorService;
 import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService;
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
-import dev.patika.vet.manager.system.dto.request.animal.AnimalSaveRequest;
-import dev.patika.vet.manager.system.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.manager.system.dto.request.doctor.DoctorSaveRequest;
 import dev.patika.vet.manager.system.dto.request.doctor.DoctorUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
-import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
 import dev.patika.vet.manager.system.dto.response.doctor.DoctorResponse;
-import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Doctor;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

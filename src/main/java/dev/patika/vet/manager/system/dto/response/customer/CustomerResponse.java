@@ -1,11 +1,10 @@
 package dev.patika.vet.manager.system.dto.response.customer;
 
-import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +17,5 @@ public class CustomerResponse {
     private String phone;
     private String mail;
     private String city;
-
 
 }

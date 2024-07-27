@@ -31,9 +31,6 @@ public class AvailableDateManager implements IAvailableDateService {
     @Override
     public AvailableDate save(AvailableDate availableDate) {
         // BURAYA TEKRAR BAKKK !
-        if (availableDate.getId() > 0 && this.availableDateRepo.existsById(availableDate.getId())) {
-            throw new NotFoundException("Aynı ID ile kayıt yapılamaz: " + availableDate.getId());
-        }
 
         Optional<AvailableDate> existedAvailableDate = availableDateRepo.findByDoctorIdAndAvailableDate(availableDate.getDoctor().getId(), availableDate.getAvailableDate());
 
@@ -95,45 +92,11 @@ public class AvailableDateManager implements IAvailableDateService {
         return this.availableDateRepo.findAll(pageable);
     }
 
-    @Override
-    public List<AvailableDate> getAvailableDatesByDoctorId(Long doctorId) {
-        if (doctorId == null || doctorId <= 0) {
-            throw new NotFoundException("Doktor kimliği null veya sıfırdan küçük/eşit olamaz.");
-        }
-        return this.availableDateRepo.findByDoctorId(doctorId);
-    }
 
-    @Override
-    public boolean isDoctorAvailableOnDate(Long doctorId, LocalDate date) {
-        if(doctorId == null || doctorId <= 0 || date == null) {
-            throw new NotFoundException(Msg.NOT_FOUND);
-        }
-        List<AvailableDate> availableDates = this.availableDateRepo.findByDoctorId(doctorId);
 
-        // doktorun uyggunluğuna göre kontrol yaparsak:
-        for (AvailableDate availableDate : availableDates) {
-            if(availableDate.getAvailableDate().equals(date)) {
-                // doktor müsaitse --> true
-                return true;
-            }
-        }
-        return false;    // doktor müsait değil
-    }
 
-    @Override
-    public List<AvailableDate> getAvailableDatesByDoctorIdAndDateRange(Long doctorId, LocalDate startDate, LocalDate endDate) {
-        if (doctorId == null || doctorId <= 0 || startDate == null || endDate == null || startDate.isAfter(endDate)) {
-            throw new NotFoundException("Doktor kimliği geçersiz, başlangıç veya bitiş tarihi null ya da başlangıç tarihi bitiş tarihinden sonra olamaz.");
-        }
 
-        List<AvailableDate> availableDates = this.availableDateRepo.findByDoctorIdAndAvailableDateBetween(doctorId, startDate, endDate);
 
-        if (availableDates == null || availableDates.isEmpty()) {
-            throw new NotFoundException("Doktorun girilen tarih aralığına ait boş zamani bulunamadı");
-        }
-
-        return availableDates;
-    }
 
 
 }

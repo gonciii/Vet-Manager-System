@@ -19,5 +19,5 @@ public interface IDoctorService {
 
     List<Doctor> getAllDoctors();
 
-    List<Doctor> getDoctorsByName(String name);
+
 }

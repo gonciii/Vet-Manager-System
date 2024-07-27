@@ -18,16 +18,14 @@ public class AvailableDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "availableDate_id")
-    private long id;
+    @Column(name = "available_date_id")
+    private Long id;
 
-    @Column(name = "availableDate",nullable = false)
+    @Column(name = "available_date", nullable = false)
     private LocalDate availableDate;
 
-
-    //  !
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
-    @JoinColumn(name = "doctor_id")
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
 

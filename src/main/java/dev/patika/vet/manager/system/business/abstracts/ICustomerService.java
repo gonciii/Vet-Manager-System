@@ -1,6 +1,6 @@
 package dev.patika.vet.manager.system.business.abstracts;
 
-import dev.patika.vet.manager.system.entities.Animal;
+
 import dev.patika.vet.manager.system.entities.Customer;
 import org.springframework.data.domain.Page;
 
@@ -30,7 +30,6 @@ public interface ICustomerService {
     // Müşteri adına göre arama
     List<Customer> getCustomerByName(String name);
 
-    //Müşteriye ait tüm hayvanları getirme
-    List<Animal> getAnimalsByCustomer(long customerId);
+
 
 }

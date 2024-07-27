@@ -1,6 +1,7 @@
 package dev.patika.vet.manager.system.dto.request.animal;
 
 
+import dev.patika.vet.manager.system.entities.Animal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 
 public class AnimalUpdateRequest {
 
+
     @NotNull(message = "Hayvan ID boş olamaz!")
     @Positive(message = "ID değeri pozitif sayı olmak zorunda.")
     private Long id;
@@ -29,17 +31,12 @@ public class AnimalUpdateRequest {
 
     private String breed;
 
-    @NotBlank(message = "Cinsiyet boş olamaz!")
-    private String gender;
-
+    private Animal.Gender gender;
 
     private String colour;
 
     @NotNull(message = "Doğum Tarihi boş olamaz!")
-    @Past(message = "Doğum Tarihi geçmişte olmalıdır!")
     private LocalDate dateOfBirth;
 
-    // customerId güncellenmeyebilir !
-    private Long customerId;
 
 }

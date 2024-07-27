@@ -1,6 +1,7 @@
 package dev.patika.vet.manager.system.dto.request.animal;
 
 
+import dev.patika.vet.manager.system.entities.Animal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -27,13 +28,13 @@ public class AnimalSaveRequest {
 
     private String breed;
 
-    @NotBlank(message = "Cinsiyet boş olamaz!")
-    private String gender;
+
+    private Animal.Gender gender;
 
     private String colour;
 
+
     @NotNull(message = "Doğum Tarihi boş olamaz!")
-    @Past(message = "Doğum Tarihi geçmişte olmalıdır!")
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Müşteri ID boş olamaz!")

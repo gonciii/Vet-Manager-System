@@ -3,18 +3,13 @@ package dev.patika.vet.manager.system.api;
 
 import dev.patika.vet.manager.system.business.abstracts.ICustomerService;
 import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService;
-import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
-import dev.patika.vet.manager.system.dto.request.animal.AnimalSaveRequest;
-import dev.patika.vet.manager.system.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.manager.system.dto.request.customer.CustomerSaveRequest;
 import dev.patika.vet.manager.system.dto.request.customer.CustomerUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
-import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
 import dev.patika.vet.manager.system.dto.response.customer.CustomerResponse;
-import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Customer;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -42,9 +37,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<CustomerResponse> save(@Valid @RequestBody CustomerSaveRequest customerSaveRequest) {
 
-
         // REQUEST--> customer
-
         Customer saveCustomer = this.modelMapper.forRequest().map(customerSaveRequest,Customer.class);
         this.customerService.save(saveCustomer);
 
@@ -88,8 +81,6 @@ public class CustomerController {
         Page<Customer> customerPage= this.customerService.cursor(page, pageSize);
         Page<CustomerResponse> customerResponsePage = customerPage
                 .map(animal -> this.modelMapper.forResponse().map(animal, CustomerResponse.class));
-
-        // CURSOR HATASI ALIRSAN BURAYA BAK !!!
         CursorResponse<CustomerResponse> cursor = new CursorResponse<>();
         cursor.setItems(customerResponsePage.getContent());
         cursor.setPageNumber(customerResponsePage.getNumber());
@@ -103,15 +94,16 @@ public class CustomerController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<CustomerResponse>> getAllCustomers() {
+
         List<Customer> customers = customerService.getAllCustomers();
         List<CustomerResponse> customerResponses = customers.stream()
                 .map(customer -> modelMapper.forResponse().map(customer, CustomerResponse.class))
                 .collect(Collectors.toList());
+
         return ResultHelper.success(customerResponses);
     }
 
     // isim ile müşteri aramak için :
-    // İsim ile müşteri ara
     @GetMapping("/name/{name}")
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<CustomerResponse>> getCustomersByName(
@@ -123,17 +115,6 @@ public class CustomerController {
         return ResultHelper.success(customerResponses);
     }
 
-    // Belirli bir müşterinin hayvanlarını getir
-    @GetMapping("/{customerId}/animals")
-    @ResponseStatus(HttpStatus.OK)
-    public ResultData<List<AnimalResponse>> getCustomerAnimals(@PathVariable("customerId") Long customerId) {
-        List<Animal> customerAnimals = customerService.getAnimalsByCustomer(customerId);
-        List<AnimalResponse> animalResponses = customerAnimals.stream()
-                .map(animal -> modelMapper.forResponse().map(animal, AnimalResponse.class))
-                .collect(Collectors.toList());
-        return ResultHelper.success(animalResponses);
-    }
-    //
 
 
 

@@ -6,6 +6,7 @@ import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.utilies.Msg;
 import dev.patika.vet.manager.system.dao.AppointmentRepo;
 import dev.patika.vet.manager.system.dao.AvailableDateRepo;
+import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,9 +30,6 @@ public class AppointmentManager implements IAppointmentService {
     // save -- yeni randevu kayıt etme
     @Override
     public Appointment save(Appointment appointment) {
-        if (appointment.getId() > 0 && this.appointmentRepo.existsById(appointment.getId())) {
-            throw new NotFoundException("Aynı ID ile randevu kaydedilemez: " + appointment.getId());
-        }
         return this.appointmentRepo.save(appointment);
     }
 
@@ -48,6 +46,17 @@ public class AppointmentManager implements IAppointmentService {
     public Page<Appointment> cursor(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page,pageSize);
         return this.appointmentRepo.findAll(pageable);
+    }
+
+
+    @Override
+    public List<Appointment> findByDoctorIdAndAppointmentDateBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, Long doctorId) {
+        return this.appointmentRepo.findByAppointmentDateAndDoctorIdBetween(startDateTime,endDateTime,doctorId);
+    }
+
+    @Override
+    public List<Appointment> findByAppointmentDateBetweenAndAnimal(LocalDateTime startDateTime, LocalDateTime endDateTime, Animal animal) {
+        return this.appointmentRepo.findByAppointmentDateAndAnimalIdBetween(startDateTime,endDateTime, animal.getId());
     }
 
     // randevu listeleme işlemi :
@@ -69,41 +78,10 @@ public class AppointmentManager implements IAppointmentService {
         this.appointmentRepo.delete(appointment);
         return true;
     }
-    // doktora göre randevuları bulma
-    @Override
-    public List<Appointment> findAppointmentsByDoctor(Long doctorId) {
-        return this.appointmentRepo.findByDoctorId(doctorId);
-    }
 
-    // tarih aralığına göre randevuları bulma
-    @Override
-    public List<Appointment> findAppointmentsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return this.appointmentRepo.findByAppointmentDateBetween(startDate,endDate);
-    }
 
-    // hayvana göre randevuları bulma
-    @Override
-    public List<Appointment> findAppointmentsByAnimal(Long animalId) {
-        return this.appointmentRepo.findByAnimalId(animalId);
-    }
 
-    // tarih aralığında belirli bir doktor için randevuları bulma
-    @Override
-    public List<Appointment> findByAppointmentDateAndAnimalIdAndDoctorIdBetween(LocalDateTime startDate, LocalDateTime endDate, Long animalId, Long doctorId) {
-        return this.appointmentRepo.findByAppointmentDateAndDoctorIdBetween(startDate,endDate,doctorId);
-    }
 
-    // tarih aralığında belirli bir doktor için randevuları bulma
-    @Override
-    public List<Appointment> findByAppointmentDateAndDoctorIdBetween(LocalDateTime startDate, LocalDateTime endDate, Long doctorId) {
-        return this.appointmentRepo.findByAppointmentDateAndDoctorIdBetween(startDate, endDate, doctorId);
-    }
-
-    //  tarih aralığında belirli bir hayvan için randevuları bulma
-    @Override
-    public List<Appointment> findAppointmentsByDateRangeAndAnimal(LocalDateTime startDate, LocalDateTime endDate, Long animalId) {
-        return this.appointmentRepo.findByAppointmentDateAndAnimalIdBetween(startDate, endDate, animalId);
-    }
 
 
 }

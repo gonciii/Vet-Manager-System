@@ -24,9 +24,7 @@ public class AvailableDateUpdateRequest {
     private LocalDate availableDate;
 
     @NotNull(message = "Doktor ID alanı boş olamaz.")
-    private LocalDate doctorId;
-
-
+    private Long doctorId;
 
 
 }

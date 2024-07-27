@@ -21,15 +21,15 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
-    private long id;
+    private Long id;
 
-    @Column(name = "customer_name")
+    @Column(name = "customer_name", nullable = false)
     private String name;
 
-    @Column(name = "customer_phone")
+    @Column(name = "customer_phone", nullable = false)
     private String phone;
 
-    @Column(name = "customer_mail",unique = true)
+    @Column(name = "customer_mail", unique = true, nullable = false)
     private String mail;
 
     @Column(name = "customer_address")
@@ -38,8 +38,7 @@ public class Customer {
     @Column(name = "customer_city")
     private String city;
 
-    // bir müşterinin birden fazla hayvanı olabilir !
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)  // animal entity'si ile ilişki kuruldu !
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Animal> animals;
 
 

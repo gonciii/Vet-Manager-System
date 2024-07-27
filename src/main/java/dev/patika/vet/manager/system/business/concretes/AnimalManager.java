@@ -6,14 +6,12 @@ import dev.patika.vet.manager.system.core.utilies.Msg;
 import dev.patika.vet.manager.system.dao.AnimalRepo;
 import dev.patika.vet.manager.system.dao.CustomerRepo;
 import dev.patika.vet.manager.system.entities.Animal;
-import dev.patika.vet.manager.system.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class AnimalManager  implements IAnimalService {
@@ -30,16 +28,12 @@ public class AnimalManager  implements IAnimalService {
     // save --> yeni hayvan kaydetme
     @Override
     public Animal save(Animal animal) {
-        // id kontrolünü yap!
-        if(animal.getId() > 0 && this.animalRepo.existsById(animal.getId())) {
-            throw new NotFoundException("Aynı ID ile hayvan kaydedilmez : " + animal.getId());
-        }
         return this.animalRepo.save(animal);
     }
 
     //  id 'ye göre hayvanı getir !
     @Override
-    public Animal get(long id) {
+    public Animal get(Long id) {
         return this.animalRepo.findById(id).orElseThrow(()
                 -> new NotFoundException(Msg.NOT_FOUND));
     }
@@ -64,7 +58,7 @@ public class AnimalManager  implements IAnimalService {
 
     // delete işlemi ! hayvan kaydını sil
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         if(!animalRepo.existsById(id)) {
             throw  new NotFoundException(id  + " id 'li kayıt sistemde bulunamadı.");
         }
@@ -83,25 +77,15 @@ public class AnimalManager  implements IAnimalService {
         return animals;
     }
 
-    // isme göre customer getir
+    // hayvan adına göre arama yap
     @Override
-    public List<Animal> getCustomerByName(String name) {
-        return this.animalRepo.findByName(name);
+    public List<Animal> getAnimalsByName(String name) {
+        return this.animalRepo.findByAnimalName(name);
     }
 
-    // isme göre hayvvan getir
     @Override
-    public List<Animal> getAnimalByName(String ownerName) {
-        return this.animalRepo.findByName(ownerName);
+    public List<Animal> getAnimalsByCustomerName(String name) {
+        return this.animalRepo.findAnimalsByCustomerName(name);
     }
 
-    // Customer Id'ye göre hayvanları getir.
-    @Override
-    public List<Animal> getAnimalsByCustomerId(long customerId) {
-        Customer customer = this.customerRepo.findById(customerId).orElse(null);
-        if(customer!= null) {
-            return customer.getAnimals();
-        }
-        return List.of();
-    }
 }

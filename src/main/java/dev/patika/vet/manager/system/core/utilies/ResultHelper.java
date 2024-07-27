@@ -41,4 +41,14 @@ public class ResultHelper {
     public static Result null_date() {
         return new Result(false,Msg.NULL_DATE,"400");
     }
+    public static <T> ResultData <T> animalNotFoundError() {
+        return new ResultData<>(false, Msg.ANIMAL_NOT_FOUND, "404", null);
+    }
+    public static <T> ResultData<T> EmailExists() {
+        return new ResultData<>(false, Msg.SAME_EMAIL, "400", null);
+    }
+
+    public static <T> ResultData<T> vaccineNameAndCodeExists() {
+        return new ResultData<>(false, Msg.SAME_VACCINE_NAME_AND_CODE, "400", null);
+    }
 }

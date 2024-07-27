@@ -1,15 +1,24 @@
 package dev.patika.vet.manager.system.business.concretes;
 
 import dev.patika.vet.manager.system.business.abstracts.IVaccineService;
+import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService;
 import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.utilies.Msg;
+import dev.patika.vet.manager.system.core.utilies.ResultHelper;
 import dev.patika.vet.manager.system.dao.VaccineRepo;
+import dev.patika.vet.manager.system.dto.request.vaccine.VaccineSaveRequest;
+import dev.patika.vet.manager.system.dto.response.vaccine.VaccineResponse;
 import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Vaccine;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,58 +28,52 @@ import java.util.Optional;
 @Service
 public class VaccineManager implements IVaccineService {
     private final VaccineRepo vaccineRepo;
+    private IModelMapperService modelMapper;
+
 
 
     public VaccineManager(VaccineRepo vaccineRepo) {
         this.vaccineRepo = vaccineRepo;
     }
 
-    // aşı kaydetme işlemi :
+
+
     @Override
     public Vaccine save(Vaccine vaccine) {
-        // aynı id ile kaydedilmeyi engellemek için :
-        if(vaccine.getId() >0 && this.vaccineRepo.existsById(vaccine.getId())) {
-            throw new NotFoundException("Aynı ID ile aşı kaydedilmez : " + vaccine.getId());
+        if(vaccineRepo.existsByName(vaccine.getName())) {
+            throw new NotFoundException(Msg.SAME_VACCINE_NAME_AND_CODE);
+        }
+        if (vaccineRepo.existsByCode(vaccine.getCode())) {
+        throw new NotFoundException(Msg.SAME_VACCINE_NAME_AND_CODE);
         }
 
-        Objects.requireNonNull(vaccine, "Aşı bulunamadı.");
-        Objects.requireNonNull(vaccine.getProtectionStartDate(), "Başlangıç tarihi boş olamaz.");
-        Objects.requireNonNull(vaccine.getProtectionFinishDate(), "Bitiş tarihi boş olamaz.");
-
-        LocalDate today = LocalDate.now();
-
-        // Aynı hayvan ID ve ad ile var olan bir aşı kaydı olup olmadığını kontrol et
-        Optional<Vaccine> existingVaccine = vaccineRepo.findByAnimalIdAndName(
-                vaccine.getAnimal().getId(), vaccine.getName());
-
-        // Eğer mevcut bir aşı varsa ve koruyuculuk tarihi bitmemişse hata fırlat
-        if (existingVaccine.isPresent() && existingVaccine.get().getProtectionFinishDate().isAfter(today)) {
-            throw new NotFoundException("Aynı ad, kod ve hayvan ID'sine sahip bir aşı kaydı zaten mevcut ve koruyuculuk süresi devam ediyor!");
-        }
-
-        // Başlangıç tarihinin bitiş tarihinden sonra olup olmadığını kontrol et
-        if (vaccine.getProtectionStartDate().isAfter(vaccine.getProtectionFinishDate())) {
-            throw new NotFoundException("Başlangıç tarihi, bitiş tarihinden sonra olamaz.");
-        }
-
-        return vaccineRepo.save(vaccine);
+        return this.vaccineRepo.save(vaccine);
     }
 
     // aşı güncelleme işlemi :
     @Override
     public Vaccine update(Vaccine vaccine) {
-        Objects.requireNonNull(vaccine, Msg.NOT_FOUND);
-        Objects.requireNonNull(vaccine.getProtectionStartDate(),Msg.NULL_DATE);
-        Objects.requireNonNull(vaccine.getProtectionFinishDate(),Msg.NULL_DATE);
+        // Check if the vaccine exists
+        Vaccine existingVaccine = this.vaccineRepo.findById(vaccine.getId())
+                .orElseThrow(() -> new NotFoundException(Msg.NOT_FOUND));
 
-        // // Koruyuculuk başlangıç tarihinin bitiş tarihinden sonra olup olmadığını kontrol et
-        if(vaccine.getProtectionStartDate().isAfter(vaccine.getProtectionFinishDate())) {
-            throw new NotFoundException("Başlangıç tarihi,bitiş tarihinden sonra olamaz.");
+        // Check if a vaccine with the same name or code already exists
+        if (vaccineRepo.existsByName(vaccine.getName())) {
+            throw new NotFoundException(Msg.SAME_VACCINE_NAME_AND_CODE);
+        }
+        if (vaccineRepo.existsByCode(vaccine.getCode())) {
+            throw new NotFoundException(Msg.SAME_VACCINE_NAME_AND_CODE);
         }
 
-        get(vaccine.getId());
-        return vaccineRepo.save(vaccine);
+        // Update the vaccine
+        existingVaccine.setName(vaccine.getName());
+        existingVaccine.setCode(vaccine.getCode());
+        existingVaccine.setProtectionStartDate(vaccine.getProtectionStartDate());
+        existingVaccine.setProtectionFinishDate(vaccine.getProtectionFinishDate());
+
+        return this.vaccineRepo.save(existingVaccine);
     }
+
     // id'ye göre aşı sil
     @Override
     public boolean delete(Long id) {
@@ -116,35 +119,7 @@ public class VaccineManager implements IVaccineService {
             throw new NotFoundException("Başlangıç tarihi bitiş tarihinden sonra olamaz.");
         }
 
-        return vaccineRepo.findByProtectionStartDateBetween(startDate, endDate);
-    }
-
-    @Override
-    public List<Animal> getAnimalsWithUpcomingVaccines(LocalDate startDate, LocalDate endDate) {
-        Objects.requireNonNull(startDate, Msg.NULL_DATE);
-        Objects.requireNonNull(endDate, Msg.NULL_DATE);
-
-        if (startDate.isAfter(endDate)) {
-            throw new NotFoundException("Başlangıç tarihi bitiş tarihinden sonra olamaz.");
-        }
-
-        return vaccineRepo.findByProtectionStartDateBetween(startDate, endDate)
-                .stream()
-                .map(Vaccine::getAnimal)
-                .distinct()
-                .toList();
-    }
-
-    @Override
-    public List<Vaccine> findByAnimalIdAndProtectionStartDateBetween(Long animalId, LocalDate startDate, LocalDate endDate) {
-        Objects.requireNonNull(startDate, Msg.NULL_DATE);
-        Objects.requireNonNull(endDate, Msg.NULL_DATE);
-
-        if (startDate.isAfter(endDate)) {
-            throw new NotFoundException("Başlangıç tarihi bitiş tarihinden sonra olamaz.");
-        }
-
-        return vaccineRepo.findByAnimalIdAndProtectionStartDateBetween(animalId, startDate, endDate);
+        return vaccineRepo.findByProtectionFinishDateBetween(startDate, endDate);
     }
 
 

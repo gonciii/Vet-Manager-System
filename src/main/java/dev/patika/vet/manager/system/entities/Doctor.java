@@ -19,15 +19,15 @@ public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "doctor_id")
-    private long id;
+    private Long id;
 
-    @Column(name = "doctor_name")
+    @Column(name = "doctor_name", nullable = false)
     private String name;
 
-    @Column(name = "doctor_phone")
+    @Column(name = "doctor_phone", nullable = false)
     private String phone;
 
-    @Column(name = "doctor_mail",unique = true)
+    @Column(name = "doctor_mail", unique = true, nullable = false)
     private String mail;
 
     @Column(name = "doctor_address")
@@ -36,12 +36,9 @@ public class Doctor {
     @Column(name = "doctor_city")
     private String city;
 
-   // bir doktor ---> birden fazla müsait,uygun zamana da sahip olabilir !
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<AvailableDate> availableDates;
 
-   // bir doktor --> birden fazla randevuya sahip olabilir !
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Appointment> appointments;
-
 }

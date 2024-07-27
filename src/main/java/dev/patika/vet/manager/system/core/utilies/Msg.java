@@ -10,4 +10,7 @@ public class Msg {
     public static final String BAD_REQUEST = "Veri bos olamaz";
     public static final String DELETED = "Kayıt silindi.";
     public static final String NULL_DATE ="Tarih boş olamaz.";
+    public static final String ANIMAL_NOT_FOUND = "Hayvan bulunamadı";
+    public static final String SAME_EMAIL = "Bu e-posta adresi ile bir kayıt zaten var.";
+    public static final String SAME_VACCINE_NAME_AND_CODE = "Aynı isim ve kod ile aşı zaten var.";
 }

@@ -18,6 +18,7 @@ public class DoctorUpdateRequest {
     @NotNull(message = "ID alanı boş olamaz.")
     @Positive(message = "ID alanı pozitif sayı olmak zorunda.")
     private long id;
+
     @NotNull(message = "Doktor adı boş olamaz.")
     private String name;
 

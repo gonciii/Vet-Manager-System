@@ -26,9 +26,10 @@ public class DoctorManager  implements IDoctorService {
     // save ---> doktor kaydetme
     @Override
     public Doctor save(Doctor doctor) {
-        if(doctor.getId() > 0 && this.doctorRepo.existsById(doctor.getId())) {
-            throw new NotFoundException("Aynı ID ile doktor kaydedilmez : " + doctor.getId());
+        if(doctorRepo.existsByMail(doctor.getMail())) {
+            throw new NotFoundException(Msg.SAME_EMAIL);
         }
+
         return this.doctorRepo.save(doctor);
     }
 
@@ -62,8 +63,5 @@ public class DoctorManager  implements IDoctorService {
         return this.doctorRepo.findAll();
     }
 
-    @Override
-    public List<Doctor> getDoctorsByName(String name) {
-        return this.doctorRepo.findByName(name);
-    }
+
 }

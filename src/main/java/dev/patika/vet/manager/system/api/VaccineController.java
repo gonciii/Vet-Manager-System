@@ -7,13 +7,10 @@ import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
-import dev.patika.vet.manager.system.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.manager.system.dto.request.vaccine.VaccineSaveRequest;
 import dev.patika.vet.manager.system.dto.request.vaccine.VaccineUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
-import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
 import dev.patika.vet.manager.system.dto.response.vaccine.VaccineResponse;
-import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Vaccine;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -62,7 +59,7 @@ public class VaccineController {
     }
 
     // tüm aşı kayıtlarını getir
-    @GetMapping()
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResultData<List<VaccineResponse>> getAllVaccines() {
         List<Vaccine> vaccines = vaccineService.getAllVaccines();
@@ -137,32 +134,6 @@ public class VaccineController {
         return ResultHelper.success(vaccineResponses);
     }
 
-    // Belirli bir tarih aralığındaki gelecekteki aşıları olan hayvanları getirir.-----------> bitiş tarihine göre filtreleme yapılıcak ! 22
-    @GetMapping("/animal/upcoming/vaccines")
-    @ResponseStatus(HttpStatus.OK)
-    public ResultData<List<AnimalResponse>> getAnimalsWithUpcomingVaccines(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<Animal> animals = vaccineService.getAnimalsWithUpcomingVaccines(startDate, endDate);
-        List<AnimalResponse> animalResponses = animals.stream()
-                .map(animal -> modelMapper.forResponse().map(animal, AnimalResponse.class))
-                .collect(Collectors.toList());
 
-        return ResultHelper.success(animalResponses);
-    }
-
-    // Belirli bir hayvanın belirli bir tarih aralığındaki aşı bilgilerini getirir.
-    @GetMapping("/animal/filter/date")
-    public ResultData<List<VaccineResponse>> getVaccinesByAnimalAndDateRange(
-            @RequestParam("animalId") Long animalId,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<Vaccine> vaccines = vaccineService.findByAnimalIdAndProtectionStartDateBetween(animalId, startDate, endDate);
-        List<VaccineResponse> vaccineResponses = vaccines.stream()
-                .map(vaccine -> modelMapper.forResponse().map(vaccine, VaccineResponse.class))
-                .collect(Collectors.toList());
-
-        return ResultHelper.success(vaccineResponses);
-    }
 
 }

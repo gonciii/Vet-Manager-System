@@ -4,21 +4,20 @@ package dev.patika.vet.manager.system.api;
 import dev.patika.vet.manager.system.business.abstracts.IAnimalService;
 import dev.patika.vet.manager.system.business.abstracts.ICustomerService;
 import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService;
+import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
-import dev.patika.vet.manager.system.core.utilies.Msg;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
 import dev.patika.vet.manager.system.dto.request.animal.AnimalSaveRequest;
 import dev.patika.vet.manager.system.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
 import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
 import dev.patika.vet.manager.system.entities.Animal;
+import dev.patika.vet.manager.system.entities.Customer;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.print.DocFlavor;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,19 +37,20 @@ public class AnimalController {
         this.modelMapper = modelMapper;
     }
 
-    // kayıt işlemi --> SAVE
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResultData<AnimalResponse> save(@Valid @RequestBody AnimalSaveRequest animalSaveRequest) {
 
+        Animal saveAnimal = this.modelMapper.forRequest().map(animalSaveRequest, Animal.class);
 
-        // REQUEST--> animal
-        Animal saveAnimal = this.modelMapper.forRequest().map(animalSaveRequest,Animal.class);
+        Customer customer = this.customerService.get(animalSaveRequest.getCustomerId());
+        saveAnimal.setCustomer(customer);
+
         this.animalService.save(saveAnimal);
+        return ResultHelper.created(this.modelMapper.forResponse().map(saveAnimal, AnimalResponse.class));
 
-        // animal --> RESPONSE
-        return ResultHelper.created(this.modelMapper.forResponse().map(saveAnimal,AnimalResponse.class));
     }
+
 
     // ID'ye göre hayvan getirme
     @GetMapping("/{id}")
@@ -112,25 +112,50 @@ public class AnimalController {
 
     }
 
-    // hayvanları isme göre  filtreleme işlemi
-    @GetMapping("/filter/{name}")
+    // isim ile hayvan aramak için
+    @GetMapping("/name/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public ResultData<List<AnimalResponse>> getAnimalByName(@PathVariable(name = "name",required = false) String name) {
-        List<Animal> filterAnimals = animalService.getAnimalByName(name);
-        List<AnimalResponse> animalResponses = filterAnimals.stream().map(animal -> modelMapper.forResponse().map(animal,AnimalResponse.class)).collect(Collectors.toList());
+    public ResultData<List<AnimalResponse>> getCustomersByName(
+            @PathVariable(name = "name", required = false) String name) {
+        List<Animal> filteredAnimal = animalService.getAnimalsByName(name);
+        List<AnimalResponse> customerResponses = filteredAnimal.stream()
+                .map(animal -> modelMapper.forResponse().map(animal, AnimalResponse.class))
+                .collect(Collectors.toList());
+        return ResultHelper.success(customerResponses);
+    }
+
+    @GetMapping("/customer/name/{customerName}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<List<AnimalResponse>> getAnimalsByCustomerName(@PathVariable("customerName") String customerName) {
+        List<Animal> animals = animalService.getAnimalsByCustomerName(customerName);
+
+        if (animals.isEmpty()) {
+            throw new NotFoundException("Belirtilen müşteri adı ile hayvan bulunamadı: " + customerName);
+        }
+
+        List<AnimalResponse> animalResponses = animals.stream()
+                .map(animal -> modelMapper.forResponse().map(animal, AnimalResponse.class))
+                .collect(Collectors.toList());
 
         return ResultHelper.success(animalResponses);
     }
 
-    // hayvan sahipleri isme göre filtreleme (burda hata var )
-    @GetMapping("/ownerName/{ownerName}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResultData<List<AnimalResponse>> getCustomerByName(@PathVariable(name = "ownerName") String ownerName) {
-        List<Animal> animals = animalService.getCustomerByName(ownerName);
-        List<AnimalResponse> animalResponses= animals.stream().map(animal -> modelMapper.forResponse().map(animal,AnimalResponse.class)).collect(Collectors.toList());
-        return ResultHelper.success(animalResponses);
 
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

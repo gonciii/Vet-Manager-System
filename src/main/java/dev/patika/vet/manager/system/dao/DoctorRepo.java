@@ -12,4 +12,8 @@ public interface DoctorRepo extends JpaRepository<Doctor,Long> {
 
     // Doktor adına göre arama yapma işlemi :
     List<Doctor> findByName(String name);
+
+    boolean existsByMail(String mail);
+
 }
+

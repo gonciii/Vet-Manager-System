@@ -17,15 +17,15 @@ import java.util.List;
 @Table(name = "animals")  // veri tabanında "animals" tablosu oluştur !
 public class Animal {
 
-    @Id  // primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // ID -->IDENTITY !
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "animal_id")
-    private long id;
+    private Long id;
 
-    @Column(name = "animal_name")
+    @Column(name = "animal_name", nullable = false)
     private String name;
 
-    @Column(name = "animal_species")
+    @Column(name = "animal_species", nullable = false)
     private String species;
 
     @Column(name = "animal_breed")
@@ -38,28 +38,23 @@ public class Animal {
     @Column(name = "animal_colour")
     private String colour;
 
-    @Column(name = "animal_dateOfBirth")
+    @Column(name = "animal_date_of_birth")
     private LocalDate dateOfBirth;
 
-    public enum Gender{
+    public enum Gender {
         MALE,
         FEMALE
     }
 
-
-    // bir müşterinin birden fazla hayvanı olabilir ama bir hayvanın bir sahibi olur !
     @ManyToOne
-    @JoinColumn(name = "customer_id") // customer_id ile ilişki kur !
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    // bir hayvanın birden fazla aşısı olabilir !
-    @OneToMany(mappedBy = "animal",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Vaccine> vaccines;
 
-    // bir hayvanın birden fazla randevusu olabilir.
-    @OneToMany(mappedBy = "animal",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Appointment> appointments;
-
 
 
 

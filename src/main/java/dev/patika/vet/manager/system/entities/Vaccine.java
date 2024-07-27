@@ -19,21 +19,20 @@ public class Vaccine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vaccine_id")
-    private long id;
+    private Long id;
 
-    @Column(name = "vaccines_name")
+    @Column(name = "vaccine_name", nullable = false)
     private String name;
 
-    @Column(name = "vaccines_code",nullable = false)
+    @Column(name = "vaccine_code", nullable = false)
     private String code;
 
-    @Column(name = "vaccines_protectionStartDate")
+    @Column(name = "protection_start_date")
     private LocalDate protectionStartDate;
 
-    @Column(name = "vaccines_protectionFinishDate")
+    @Column(name = "protection_finish_date")
     private LocalDate protectionFinishDate;
 
-    // birden fazla aşı --> bir hayvan
     @ManyToOne
     @JoinColumn(name = "animal_id")
     private Animal animal;

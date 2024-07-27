@@ -5,7 +5,6 @@ import dev.patika.vet.manager.system.business.abstracts.ICustomerService;
 import dev.patika.vet.manager.system.core.exception.NotFoundException;
 import dev.patika.vet.manager.system.core.utilies.Msg;
 import dev.patika.vet.manager.system.dao.CustomerRepo;
-import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +26,8 @@ public class CustomerManager implements ICustomerService {
     // yeni müşteri oluşturma : save
     @Override
     public Customer save(Customer customer) {
-        if (customer.getId() > 0 && this.customerRepo.existsById(customer.getId())) {
-            throw new NotFoundException("Aynı ID ile müşteri kaydedilemez: " + customer.getId());
+        if(customerRepo.existsByMail(customer.getMail())) {
+            throw new NotFoundException(Msg.SAME_EMAIL);
         }
         return this.customerRepo.save(customer);
     }
@@ -81,13 +80,9 @@ public class CustomerManager implements ICustomerService {
     // müşterilerin adına göre getir
     @Override
     public List<Customer> getCustomerByName(String name) {
-        return customerRepo.findByName(name);
+        return customerRepo.findByNameContainingIgnoreCase(name);
     }
 
-    // customer ıd'ye göre havanları getir.
-    @Override
-    public List<Animal> getAnimalsByCustomer(long customerId) {
-        Customer customer = this.get(customerId);
-        return customer.getAnimals();
-    }
+
+
 }

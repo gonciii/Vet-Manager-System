@@ -7,23 +7,16 @@ import dev.patika.vet.manager.system.core.config.modelmapper.IModelMapperService
 import dev.patika.vet.manager.system.core.result.Result;
 import dev.patika.vet.manager.system.core.result.ResultData;
 import dev.patika.vet.manager.system.core.utilies.ResultHelper;
-import dev.patika.vet.manager.system.dto.request.animal.AnimalUpdateRequest;
 import dev.patika.vet.manager.system.dto.request.availabledate.AvailableDateSaveRequest;
 import dev.patika.vet.manager.system.dto.request.availabledate.AvailableDateUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
-
-import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
 import dev.patika.vet.manager.system.dto.response.availabledate.AvailableDateResponse;
-
-import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.AvailableDate;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -113,62 +106,5 @@ public class AvailableDateController {
         this.availableDateService.update(updateAvailableDate);
         return ResultHelper.success(this.modelMapper.forResponse().map(updateAvailableDate,AvailableDateResponse.class));
     }
-
-    // Belirli bir doktora ait AvailableDate kayıtlarını getiren metod
-    @GetMapping("/doctor/{doctorId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResultData<List<AvailableDateResponse>> getAvailableDatesByDoctor(@PathVariable("doctorId") long doctorId) {
-        List<AvailableDate> availableDates = availableDateService.getAvailableDatesByDoctorId(doctorId);
-
-        List<AvailableDateResponse> availableDateResponses = availableDates.stream()
-                .map(availableDate -> modelMapper.forResponse().map(availableDate, AvailableDateResponse.class))
-                .collect(Collectors.toList());
-        return ResultHelper.success(availableDateResponses);
-    }
-
-    // Belirli bir doktorun belirli bir tarihte müsait olup olmadığını kontrol eden metod
-    @GetMapping("/doctor/{doctorId}/availability")
-    @ResponseStatus(HttpStatus.OK)
-    public ResultData<String> checkDoctorAvailability(
-            @PathVariable("doctorId") Long doctorId,
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        // Belirli bir doktorun belirtilen tarihte müsait olup olmadığını kontrol et
-        boolean isAvailable = availableDateService.isDoctorAvailableOnDate(doctorId, date);
-
-        // Kontrol sonucuna göre başarılı bir response döndür
-        if (isAvailable) {
-            return ResultHelper.success("Doktor belirtilen tarihte müsaittir.");
-        } else {
-            return ResultHelper.success("Doktor belirtilen tarihte müsait değil.");
-        }
-    }
-
-    // Belirli bir doktorun belirli bir tarih aralığındaki müsait zamanlarını getiren metod
-    @GetMapping("/doctor/{doctorId}/availability-range")
-    @ResponseStatus(HttpStatus.OK)
-    public ResultData<List<AvailableDateResponse>> getAvailableDatesByDoctorAndDateRange(
-            @PathVariable("doctorId") long doctorId,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        List<AvailableDate> availableDates = availableDateService.getAvailableDatesByDoctorIdAndDateRange(doctorId, startDate, endDate);
-
-        List<AvailableDateResponse> availableDateResponses = availableDates.stream()
-                .map(availableDate -> modelMapper.forResponse().map(availableDate, AvailableDateResponse.class))
-                .collect(Collectors.toList());
-        return ResultHelper.success(availableDateResponses);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -21,18 +21,16 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appointment_id")
-    private long id;
+    private Long id;
 
-    @Column(name = "appointmentDate",nullable = false)
+    @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
 
-    // birden fazla randevu ---> bir hayvan
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "animal_id")
+    @ManyToOne
+    @JoinColumn(name = "animal_id", nullable = false)
     private Animal animal;
 
-    // birden fazla randevu  ---> bir doktor
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "doctor_id")
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 }

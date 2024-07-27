@@ -13,19 +13,15 @@ import java.util.Optional;
 @Repository
 public interface VaccineRepo  extends JpaRepository<Vaccine,Long> {
 
-    // Belirli bir hayvana ait tüm aşı kayıtlarını getirme
     List<Vaccine> findByAnimalId(Long animalId);
-    // aşı kodu
-    List<Vaccine> findByCode(String code);
-    // aşı ismi
-    List<Vaccine> findByName(String name);
-    //
-    Optional<Vaccine> findByAnimalIdAndName(Long animalId, String name);
 
-    // Belirli bir tarih aralığına göre koruma başlangıcı olan aşı kayıtlarını getirme
-    List<Vaccine> findByProtectionStartDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Vaccine> findByNameAndCode(String name, String code);
 
-    // Belirli bir hayvana ait, belirli bir tarih aralığına göre koruma başlangıcı olan aşı kayıtlarını getirme
-    List<Vaccine> findByAnimalIdAndProtectionStartDateBetween(Long animalId, LocalDate startDate, LocalDate endDate);
+    List<Vaccine> findByProtectionFinishDateBetween(LocalDate startDate, LocalDate endDate);
+
+
+    boolean existsByName(String name);
+
+    boolean existsByCode(String code);
 
 }
