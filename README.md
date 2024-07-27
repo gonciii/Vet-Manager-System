@@ -27,4 +27,17 @@ Projede bulunan entity sınıfları ve aralarındaki ilişkiler belirlenmiştir.
 ## Postman Collection
 Tüm API endpointleri ilgili entity'ye göre Postman collection'a klasör klasör kaydedilmiştir. Bu collection export edilerek proje klasörüne eklenmiştir.
 
+## API Endpoints
+
+## Animal API Endpointleri
+
+GET	/v1/animals	Tüm hayvanları listele
+POST	/v1/animals	Yeni hayvan kaydet
+GET	/v1/animals/{id}	Belirli bir hayvanı ID ile getir
+PUT	/v1/animals/{id}	Belirli bir hayvanın bilgilerini güncelle
+DELETE	/v1/animals/{id}	Belirli bir hayvanı sil
+GET	/v1/animals/search?name={name}	İsme göre hayvanları filtrele
+GET	/v1/customers/{id}/animals	Belirli bir müşteriye ait tüm hayvanları listele
+
+
 
