@@ -37,5 +37,9 @@ Tüm API endpointleri ilgili entity'ye göre Postman collection'a klasör klasö
 
 ![Ekran Görüntüsü (67)](https://github.com/user-attachments/assets/f2b64f90-fa94-475a-bb37-3841f2c7c2bc)
 
+## Doctor API Endpoint
+
+![Ekran Görüntüsü (68)](https://github.com/user-attachments/assets/3c458bd8-3d28-45ad-9636-c3b94a2dd73b)
+
 
 
