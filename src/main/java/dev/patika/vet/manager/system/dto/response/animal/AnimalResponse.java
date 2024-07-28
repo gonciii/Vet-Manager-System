@@ -22,7 +22,7 @@ public class AnimalResponse {
     private String colour;
     private LocalDate dateOfBirth;
     private Long customerId;
-    private String customerName;
+    //private String customerName;
 
 
 }

@@ -12,6 +12,7 @@ import dev.patika.vet.manager.system.dto.request.appointment.AppointmentSaveRequ
 import dev.patika.vet.manager.system.dto.request.appointment.AppointmentUpdateRequest;
 import dev.patika.vet.manager.system.dto.response.CursorResponse;
 
+import dev.patika.vet.manager.system.dto.response.animal.AnimalResponse;
 import dev.patika.vet.manager.system.dto.response.appointment.AppointmentResponse;
 import dev.patika.vet.manager.system.entities.Animal;
 import dev.patika.vet.manager.system.entities.Appointment;
@@ -76,6 +77,18 @@ public class AppointmentController {
         return ResultHelper.ok();
     }
 
+    // tüm randevuarı getir
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ResultData<List<AppointmentResponse>> getAllAppointments() {
+        List<Appointment> appointments = appointmentService.getAllAppointments();
+        List<AppointmentResponse> appointmentResponses = appointments.stream().
+                map(appointment -> modelMapper.forResponse().map(appointment,AppointmentResponse.class))
+                .collect(Collectors.toList());
+        return ResultHelper.success(appointmentResponses);
+
+    }
+
     // cursor ---> randevu sayfalama
     @GetMapping("/cursor/")
     @ResponseStatus(HttpStatus.OK)
@@ -108,7 +121,6 @@ public class AppointmentController {
     @GetMapping("/animal")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ResultData<List<AppointmentResponse>>>getByAnimalIdAndAppointmentDateBetween(
-            // This method returns the appointments by animal id.
             @RequestParam("animalId") Long animalId,
             @RequestParam("start_date_time") LocalDateTime startDateTime,
             @RequestParam("end_date_time") LocalDateTime endDateTime) {

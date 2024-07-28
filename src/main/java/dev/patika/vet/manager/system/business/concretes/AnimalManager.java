@@ -55,12 +55,10 @@ public class AnimalManager  implements IAnimalService {
     // update işlemi ! kaydı güncelle
     @Override
     public Animal update(Animal animal) {
-        // id kontrol --- > yoksa exception
-        this.get(animal.getId());
-        if( !animalRepo.existsById(animal.getId())) {
-            throw new NotFoundException(animal.getId() + " id'li kayıt sistemde bulanamdı.");
+        if (!animalRepo.existsById(animal.getId())) {
+            throw new NotFoundException(animal.getId() + " id'li kayıt sistemde bulunamadı.");
         }
-        return this.animalRepo.save(animal);
+        return animalRepo.save(animal);
     }
 
     // delete işlemi ! hayvan kaydını sil

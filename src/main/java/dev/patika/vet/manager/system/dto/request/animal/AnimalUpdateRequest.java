@@ -38,5 +38,8 @@ public class AnimalUpdateRequest {
     @NotNull(message = "Doğum Tarihi boş olamaz!")
     private LocalDate dateOfBirth;
 
+    @NotNull(message = "Müşteri ID boş olamaz.")
+    private Long customerId;
+
 
 }
