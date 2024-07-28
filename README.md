@@ -47,6 +47,9 @@ Tüm API endpointleri ilgili entity'ye göre Postman collection'a klasör klasö
 
 ## Vaccine API Endpoint
 
+![Ekran Görüntüsü (71)](https://github.com/user-attachments/assets/0f4e37e9-4567-488e-b9b0-617e46236653)
+
+
 ## AvailableDate API Endpoint
 
 ![Ekran Görüntüsü (70)](https://github.com/user-attachments/assets/b72952dd-7c3c-45d8-861a-36e22f37c7b6)
