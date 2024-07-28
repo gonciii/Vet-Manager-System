@@ -21,6 +21,8 @@ IoC ve DI
 Projede IoC (Inversion of Control) ve DI (Dependency Injection) için constructor injection kullanılmıştır.
 Projede bulunan entity sınıfları ve aralarındaki ilişkiler belirlenmiştir.
 
+##### Bu uygulama, Spring Boot kullanılarak geliştirilmiştir ve varsayılan olarak `http://localhost:8080` adresinde çalışır.
+
 ## UML Diagrams
 ![Ekran Görüntüsü (65)](https://github.com/user-attachments/assets/ee987206-2315-4ef7-a580-276df2cc3c0f)
 
