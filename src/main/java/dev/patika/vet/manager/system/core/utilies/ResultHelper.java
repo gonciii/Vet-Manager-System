@@ -26,6 +26,9 @@ public class ResultHelper {
     public static Result notFoundError(String msg) {
         return new Result(true,msg,"404");
     }
+    public static Result validationError(String message) {
+        return new Result(false, message, "400");
+    }
 
     public static Result pageError(String msg) {
         return new Result(false,Msg.NOT_PAGE_ERROR,"404");
